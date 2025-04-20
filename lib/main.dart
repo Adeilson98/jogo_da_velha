@@ -43,8 +43,10 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
           } else {
             _placarO++;
           }
+          _mostrarDialog(_mensagem);
         } else if (!_tabuleiro.contains('')) {
           _mensagem = 'Empate!';
+          _mostrarDialog(_mensagem);
         } else {
           _jogadorAtual = _jogadorAtual == 'X' ? 'O' : 'X';
         }
@@ -52,6 +54,37 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
 
     }
 
+  }
+
+  void _mostrarDialog(String titulo) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(titulo),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _reiniciarJogo();
+              },
+              child: Text('Jogar Novamente'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _reiniciarJogo();
+                  _placarX = 0;
+                  _placarO = 0;
+                });
+              },
+              child: Text('Resetar Placar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool _verificarVencedor(String jogador) {
