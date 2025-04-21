@@ -12,6 +12,13 @@ class JogoDaVelhaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Jogo da Velha',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        scaffoldBackgroundColor: Colors.grey[100],
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontSize: 20),
+        ),
+      ),
       home: JogoDaVelha(),
       debugShowCheckedModeBanner: false,
     );
@@ -139,13 +146,24 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
                 child: Container(
                   margin: EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    border: Border.all(),
-                    color: Colors.grey[200],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(2, 2),
+                      )
+                    ]
                   ),
                   child: Center(
                     child: Text(
                       _tabuleiro[index],
-                      style: TextStyle(fontSize: 40),
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: _tabuleiro[index] == 'X' ? Colors.blue : Colors.red,
+                      ),
                     ),
                   ),
                 ),
@@ -158,9 +176,18 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
             style: TextStyle(fontSize: 20, color: Colors.blue),
           ),
           SizedBox(height: 10),
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: _reiniciarJogo,
-            child: Text('Reiniciar'),
+            icon: Icon(Icons.refresh),
+            label: Text('Reiniciar'),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              )
+            ),
           )
         ],
       ),
