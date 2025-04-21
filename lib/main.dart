@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jogo_da_velha/tela_inicial.dart';
 
 void main() {
   runApp(const JogoDaVelhaApp());
@@ -19,7 +20,7 @@ class JogoDaVelhaApp extends StatelessWidget {
           bodyLarge: TextStyle(fontSize: 20),
         ),
       ),
-      home: JogoDaVelha(),
+      home: TelaInicial(),
       debugShowCheckedModeBanner: false,
     );
   }
