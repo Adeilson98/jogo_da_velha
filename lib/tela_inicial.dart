@@ -1,30 +1,47 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-
+import 'jogo_da_velha.dart';
 
 class TelaInicial extends StatelessWidget {
 
-  const TelaInicial({super.key});
+  final bool modoEscuro;
+  final VoidCallback alternarTema;
+
+  const TelaInicial({
+    super.key,
+    required this.modoEscuro,
+    required this.alternarTema,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple[50],
+      appBar: AppBar(
+        title: const Text(''),
+        actions: [
+          IconButton(
+            icon: Icon(modoEscuro ? Icons.light_mode : Icons.dark_mode),
+            onPressed: alternarTema,
+          ),
+        ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      backgroundColor: modoEscuro ? Colors.black : Colors.deepPurple[50],
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.games, size: 100, color: Colors.deepPurple),
-            SizedBox(height: 20),
+            const Icon(Icons.games, size: 100, color: Colors.deepPurple),
+            const SizedBox(height: 20,),
             Text(
               'Jogo da Velha',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Colors.deepPurple[800],
+                color: modoEscuro ? Colors.white : Colors.deepPurple[800],
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -33,15 +50,15 @@ class TelaInicial extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12)
                 ),
               ),
-              child: Text('Iniciar Jogo'),
-            )
+              child: const Text('Iniciar Jogo'),
+            ),
           ],
         ),
       ),
