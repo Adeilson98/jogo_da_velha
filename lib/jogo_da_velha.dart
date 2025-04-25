@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:confetti/confetti.dart';
 
 class JogoDaVelha extends StatefulWidget {
 
@@ -14,6 +15,22 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
   String? _vencedor;
   int _placarX = 0;
   int _placarO = 0;
+
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(
+        duration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
 
   void _resetarTabuleiro() {
 
@@ -76,6 +93,9 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
             _placarO++;
 
           }
+
+          _confettiController.play();
+
         });
 
         return;
@@ -84,6 +104,23 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
 
     }
 
+  }
+
+  Widget _construirCelula(int index) {
+    return GestureDetector(
+      onTap: () => _fazerJogada(index),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade600),
+        ),
+        child: Center(
+          child: Text(
+            _tabuleiro[index],
+            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -100,69 +137,73 @@ class _JogoDaVelhaState extends State<JogoDaVelha> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const SizedBox(height: 20),
-          Text(
-            'Placar - X: $_placarX | O: $_placarO',
-            style: const TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: GridView.builder(
-              itemCount: 9,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Vez de: $_jogadorAtual',
+                style: const TextStyle(fontSize: 24),
               ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () => _fazerJogada(index),
-                  child: Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          blurRadius: 5,
-                          offset: const Offset(2, 2)
-                        ),
-                      ],
-                    ),
-                    child: Center(
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 300,
+                height: 300,
+                child: GridView.builder(
+                  itemCount: 9,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                  ),
+                  itemBuilder: (context, index) => _construirCelula(index),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Placar - X: $_placarX | O: $_placarO',
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              if(_vencedor != null)
+                Column(
+                  children: [
+                    AnimatedScale(
+                      scale: 1.2,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeOutBack,
                       child: Text(
-                        _tabuleiro[index],
-                        style: TextStyle(
-                          fontSize: 48,
-                          color: _tabuleiro[index] == 'X'
-                            ? Colors.deepPurple
-                              : Colors.orange,
+                        '$_vencedor venceuu!',
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _resetarTabuleiro,
+                      child: const Text('Jogar novamente'),
+                    )
+                  ],
+                )
+            ],
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                Colors.red,
+                Colors.green,
+                Colors.blue,
+                Colors.orange,
+                Colors.purple,
+              ],
             ),
           ),
-          if(_vencedor != null)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    '$_vencedor venceu!',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _resetarTabuleiro,
-                    child: const Text('Jogar novamente'),
-                  )
-                ],
-              ),
-            )
         ],
       ),
     );
